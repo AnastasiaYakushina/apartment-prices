@@ -11,21 +11,23 @@
             <thead class="table-light">
                 <tr>
                     <th>ID</th>
-                    <th>Адрес</th>
-                    <th>Цена (руб.)</th>
-                    <th>Комнат</th>
+                    <th>Застройщик</th>
+                    <th>ЖК</th>
                     <th>Площадь (м²)</th>
-                    <th>Действия</th>
+                    <th>Комнат</th>
+                    <th>Цена (руб.)</th>
+                    <th>Подробнее</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($apartments as $apartment)
                     <tr>
                         <td>{{ $apartment->id }}</td>
-                        <td>{{ $apartment->address }}</td>
-                        <td>{{ number_format($apartment->price, 0, '.', ' ') }}</td>
-                        <td>{{ $apartment->rooms_count }}</td>
+                        <td>{{ $apartment->developer }}</td>
+                        <td>{{ $apartment->complex }}</td>
                         <td>{{ $apartment->area }}</td>
+                        <td>{{ $apartment->rooms_count }}</td>
+                        <td>{{ number_format($apartment->price, 0, '.', ' ') }}</td>
                         <td>
                             <a href="{{ route('apartments.show', $apartment) }}" class="btn btn-sm btn-info text-white">
                                 Просмотр

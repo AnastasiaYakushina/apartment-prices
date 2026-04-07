@@ -18,4 +18,22 @@ class ApartmentController extends Controller
         $apartment = Apartment::findOrFail($id);
         return view('apartment.show', compact('apartment'));
     }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+             'url' => 'required|url|starts_with:https://www.pik.ru,https://pik.ru'
+        ]);
+
+        $url = $validated['url'];
+
+        $data = Apartment::getRemoteData($url);
+
+        if (!$data) {
+            return back()->withErrors(['url' => 'Не удалось извлечь данные о квартире. Проверьте ссылку.']);
+        }
+
+        Apartment::updateOrCreate(['url' => $url], $data);
+        return redirect()->route('apartments.index');
+    }
 }

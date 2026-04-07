@@ -17,9 +17,10 @@ return new class extends Migration
             $table->string('url')->unique();
             $table->unsignedTinyInteger('rooms_count');
             $table->decimal('area', 8, 2);
-            $table->string('address');
+            $table->string('developer');
+            $table->string('complex');
             $table->timestamps();
-        });
+});
     }
 
     /**
