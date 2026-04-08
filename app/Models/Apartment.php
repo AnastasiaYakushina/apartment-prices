@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Http;
 
 class Apartment extends Model
 {
-    protected $fillable = ['url', 'price', 'rooms_count', 'area', 'developer', 'complex'];
+    protected $fillable = ['url', 'price', 'initial_price', 'rooms_count', 'area', 'developer', 'complex'];
 
     public static function getRemoteData($url)
     {

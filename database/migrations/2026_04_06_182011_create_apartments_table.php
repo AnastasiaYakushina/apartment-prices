@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('apartments', function (Blueprint $table) {
             $table->id();
             $table->integer('price');
+            $table->integer('initial_price')->nullable();
             $table->string('url')->unique();
             $table->unsignedTinyInteger('rooms_count');
             $table->decimal('area', 8, 2);

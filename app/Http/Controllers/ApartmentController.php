@@ -33,7 +33,16 @@ class ApartmentController extends Controller
             return back()->withErrors(['url' => 'Не удалось извлечь данные о квартире. Проверьте ссылку.']);
         }
 
-        Apartment::updateOrCreate(['url' => $url], $data);
+        $apartment = Apartment::firstOrNew(['url' => $url]);
+
+        if ($apartment->exists) {
+            $apartment->price = $data['price'];
+        } else {
+            $apartment->fill($data);
+            $apartment->initial_price = $data['price'];
+        }
+        $apartment->save();
+        
         return redirect()->route('apartments.index');
     }
 }
