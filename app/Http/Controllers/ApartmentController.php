@@ -9,7 +9,7 @@ class ApartmentController extends Controller
 {
     public function index()
     {
-        $apartments = Apartment::paginate();
+        $apartments = Apartment::all();
         return view('apartment.index', compact('apartments'));
     }
 
@@ -35,14 +35,15 @@ class ApartmentController extends Controller
 
         $apartment = Apartment::firstOrNew(['url' => $url]);
 
-        if ($apartment->exists) {
-            $apartment->price = $data['price'];
-        } else {
+        if (!$apartment->exists) {
             $apartment->fill($data);
             $apartment->initial_price = $data['price'];
+        } 
+        $apartment->price = $data['price'];
+        if ($apartment->isDirty('price')) {
+            $apartment->save();
+            $apartment->prices()->create(['price' => $data['price']]);
         }
-        $apartment->save();
-        
         return redirect()->route('apartments.index');
     }
 }

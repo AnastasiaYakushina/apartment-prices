@@ -9,6 +9,11 @@ class Apartment extends Model
 {
     protected $fillable = ['url', 'price', 'initial_price', 'rooms_count', 'area', 'developer', 'complex'];
 
+    public function prices()
+    {
+        return $this->hasMany(ApartmentPrice::class);
+    }
+
     public static function getRemoteData($url)
     {
         $flatId = basename($url);
