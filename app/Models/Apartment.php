@@ -23,7 +23,7 @@ class Apartment extends Model
             ])->get("https://api.pik.ru/v2/flat?id={$flatId}");
 
         if ($response->successful()) {
-            $flat = $response->json() ?? null;    
+            $flat = $response->json() ?? null;
 
             if ($flat) {
                 return [
