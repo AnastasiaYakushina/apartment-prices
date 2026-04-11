@@ -38,4 +38,18 @@ class Apartment extends Model
 
         return null;
     }
+
+    public function getPriceTotalDiff()
+    {
+        return $this->price - $this->initial_price;
+    }
+
+    public function getPriceTotalDiffPercent()
+    {
+        if (!$this->initial_price) {
+            return 0;
+        }
+
+        return ($this->price / $this->initial_price) * 100 - 100;
+    }
 }

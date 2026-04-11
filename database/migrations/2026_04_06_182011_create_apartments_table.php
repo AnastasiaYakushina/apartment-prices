@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('developer');
             $table->string('complex');
             $table->timestamps();
-});
+        });
     }
 
     /**

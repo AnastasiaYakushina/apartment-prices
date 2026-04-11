@@ -4,7 +4,6 @@
     <div class="container py-4">
         <h1 class="mb-4">Квартира #{{ $apartment->id }}</h1>
 
-        <!-- Основная карточка -->
         <div class="card shadow-sm mb-5">
             <div class="card-body">
                 <h3 class="card-title h5 mb-4">Данные о квартире:</h3>
@@ -24,21 +23,13 @@
                         </tr>
                         <tr>
                             <th class="text-muted">Изменение с начала отслеживания:</th>
-                            <td>
-                                @php
-                                    $totalDiff = $apartment->price - $apartment->initial_price;
-                                    $totalPercent =
-                                        $apartment->initial_price > 0
-                                            ? ($totalDiff / $apartment->initial_price) * 100
-                                            : 0;
-                                @endphp
-
-                                <span
-                                    class="fw-bold {{ $totalDiff > 0 ? 'text-danger' : ($totalDiff < 0 ? 'text-success' : 'text-dark') }}">
-                                    {{ $totalDiff > 0 ? '+' : '' }}{{ number_format($totalDiff, 0, '.', ' ') }} руб.
-                                    ({{ number_format($totalPercent, 2) }}%)
-                                </span>
+                            <td
+                                class="fw-bold {{ $apartment->getPriceTotalDiff() > 0 ? 'text-danger' : ($apartment->getPriceTotalDiff() < 0 ? 'text-success' : 'text-dark') }}">
+                                {{ $apartment->getPriceTotalDiff() > 0 ? '+' : '' }}
+                                {{ number_format($apartment->getPriceTotalDiff(), 0, '.', ' ') }} руб.
+                                ({{ number_format($apartment->getPriceTotalDiffPercent(), 2) }}%)
                             </td>
+
                         </tr>
                         <tr>
                             <th class="text-muted">Комнат:</th>
@@ -61,7 +52,6 @@
             </div>
         </div>
 
-        <!-- Таблица истории -->
         <div class="mt-4">
             <h3 class="h5 mb-3">История цен</h3>
             <div class="table-responsive">
@@ -76,26 +66,16 @@
                     </thead>
                     <tbody>
                         @foreach ($apartment->prices->sortByDesc('created_at')->values() as $index => $price_entry)
-                            @php
-                                $allPrices = $apartment->prices->sortBy('created_at')->values();
-                                $currentPos = $allPrices->search(fn($item) => $item->id === $price_entry->id);
-                                $previous_entry = $allPrices[$currentPos - 1] ?? null;
-
-                                $diff = $previous_entry ? $price_entry->price - $previous_entry->price : 0;
-                                $percent =
-                                    $previous_entry && $previous_entry->price != 0
-                                        ? ($diff / $previous_entry->price) * 100
-                                        : 0;
-                            @endphp
                             <tr>
                                 <td>{{ $price_entry->created_at->format('d.m.Y') }}</td>
                                 <td class="fw-bold">{{ number_format($price_entry->price, 0, '.', ' ') }} ₽</td>
-                                <td class="{{ $diff > 0 ? 'text-danger' : ($diff < 0 ? 'text-success' : 'text-muted') }}">
-                                    {{ $diff > 0 ? '+' : '' }}{{ $diff != 0 ? number_format($diff, 0, '.', ' ') : '—' }}
+                                <td
+                                    class="{{ $price_entry->getPriceDiff() > 0 ? 'text-danger' : ($price_entry->getPriceDiff() < 0 ? 'text-success' : 'text-muted') }}">
+                                    {{ $price_entry->getPriceDiff() > 0 ? '+' : '' }}{{ $price_entry->getPriceDiff() != 0 ? number_format($price_entry->getPriceDiff(), 0, '.', ' ') : '—' }}
                                 </td>
                                 <td
-                                    class="{{ $percent > 0 ? 'text-danger' : ($percent < 0 ? 'text-success' : 'text-muted') }}">
-                                    {{ $percent != 0 ? number_format($percent, 2) . '%' : '—' }}
+                                    class="{{ $price_entry->getPriceDiffPercent() > 0 ? 'text-danger' : ($price_entry->getPriceDiffPercent() < 0 ? 'text-success' : 'text-muted') }}">
+                                    {{ $price_entry->getPriceDiffPercent() != 0 ? number_format($price_entry->getPriceDiffPercent(), 2) . '%' : '—' }}
                                 </td>
                             </tr>
                         @endforeach

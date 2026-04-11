@@ -29,7 +29,7 @@ class ApartmentController extends Controller
 
         if (str_contains($url, 'test')) {
             $data = [
-            'price' => 13900000,
+            'price' => 14000000,
             'rooms_count' => 3,
             'area' => 78.9,
             'developer' => 'ПИК',
