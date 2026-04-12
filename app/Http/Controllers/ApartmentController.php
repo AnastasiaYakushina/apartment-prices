@@ -39,15 +39,18 @@ class ApartmentController extends Controller
             $apartment->fill($data);
             $apartment->initial_price = $data['price'];
             $apartment->save();
+            $apartment->prices()->create(['price' => $data['price']]);
+            return redirect()->route('apartments.show', $apartment)->with('success', 'Квартира добавлена');
+        } else {
+            $apartment->refreshData($data['price']);
+            return redirect()->route('apartments.show', $apartment)->with('success', 'Квартира уже отслеживается');
         }
-        $apartment->refreshData($data['price']);
-        return redirect()->route('apartments.index');
     }
 
     public function destroy($id)
     {
         $apartment = Apartment::findOrFail($id);
         $apartment->delete();
-        return redirect()->route('apartments.index');
+        return redirect()->route('apartments.index')->with('success', 'Квартира больше не отслеживается');
     }
 }
