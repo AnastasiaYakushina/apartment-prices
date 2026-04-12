@@ -52,4 +52,15 @@ class Apartment extends Model
 
         return ($this->price / $this->initial_price) * 100 - 100;
     }
+
+    public function refreshData($newPrice)
+    {
+        $this->price = $newPrice;
+        if ($this->isDirty('price')) {
+            $this->save();
+            $this->prices()->create(['price' => $newPrice]);
+            return true;
+        }
+        return false;
+    }
 }

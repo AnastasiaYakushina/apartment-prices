@@ -27,18 +27,7 @@ class ApartmentController extends Controller
 
         $url = $validated['url'];
 
-        if (str_contains($url, 'test')) {
-            $data = [
-            'price' => 14000000,
-            'rooms_count' => 3,
-            'area' => 78.9,
-            'developer' => 'ПИК',
-            'complex' => 'Тестовый ЖК'
-            ];
-        } else {
-            $data = Apartment::getRemoteData($url);
-        }
-
+        $data = Apartment::getRemoteData($url);
 
         if (!$data) {
             return back()->withErrors(['url' => 'Не удалось извлечь данные о квартире. Проверьте ссылку.']);
@@ -49,12 +38,16 @@ class ApartmentController extends Controller
         if (!$apartment->exists) {
             $apartment->fill($data);
             $apartment->initial_price = $data['price'];
-        }
-        $apartment->price = $data['price'];
-        if ($apartment->isDirty('price')) {
             $apartment->save();
-            $apartment->prices()->create(['price' => $data['price']]);
         }
+        $apartment->refreshData($data['price']);
+        return redirect()->route('apartments.index');
+    }
+
+    public function destroy($id)
+    {
+        $apartment = Apartment::findOrFail($id);
+        $apartment->delete();
         return redirect()->route('apartments.index');
     }
 }

@@ -7,6 +7,9 @@
         <div class="card shadow-sm mb-5">
             <div class="card-body">
                 <h3 class="card-title h5 mb-4">Данные о квартире:</h3>
+                <p class="text-muted small mt-3 mb-0">
+                    Цена отслеживается с: {{ $apartment->created_at->format('d.m.Y H:i') }}
+                </p>
                 <table class="table table-borderless align-middle">
                     <tbody>
                         <tr>
@@ -46,9 +49,17 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="text-muted small mt-3 mb-0">
-                    Добавлено: {{ $apartment->created_at->format('d.m.Y H:i') }}
-                </p>
+
+                <form action="{{ route('apartments.destroy', $apartment->id) }}" method="POST"
+                    onsubmit="return confirm('Вы уверены, что хотите прекратить отслеживание этой квартиры?')">
+                    @csrf
+                    @method('DELETE')
+
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        Удалить квартиру из отслеживаемых
+                    </button>
+                </form>
+
             </div>
         </div>
 
