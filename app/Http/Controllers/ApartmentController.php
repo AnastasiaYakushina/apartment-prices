@@ -9,7 +9,7 @@ class ApartmentController extends Controller
 {
     public function index()
     {
-        $apartments = Apartment::all();
+        $apartments = Apartment::with('prices')->latest()->get();
         return view('apartment.index', compact('apartments'));
     }
 
