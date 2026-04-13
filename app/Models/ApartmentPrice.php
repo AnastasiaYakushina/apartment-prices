@@ -15,24 +15,18 @@ class ApartmentPrice extends Model
 
     public function getPriceDiff()
     {
-         $previous = $this->apartment->prices()
-        ->where('created_at', '<', $this->created_at)
-        ->latest()
-        ->first();
+        $allPrices = $this->apartment->prices->sortBy('created_at')->values();
+        $currentPos = $allPrices->search(fn($item) => $item->id === $this->id);
+        $previous = $allPrices[$currentPos - 1] ?? null;
 
-        if (!$previous) {
-            return 0;
-        }
-
-        return $this->price - $previous->price;
+        return $previous ? ($this->price - $previous->price) : 0;
     }
 
     public function getPriceDiffPercent()
     {
-        $previous = $this->apartment->prices()
-        ->where('created_at', '<', $this->created_at)
-        ->latest()
-        ->first();
+        $allPrices = $this->apartment->prices->sortBy('created_at')->values();
+        $currentPos = $allPrices->search(fn($item) => $item->id === $this->id);
+        $previous = $allPrices[$currentPos - 1] ?? null;
 
         if (!$previous || $previous->price == 0) {
             return 0;
