@@ -50,15 +50,26 @@
                     </tbody>
                 </table>
 
-                <form action="{{ route('apartments.destroy', $apartment->id) }}" method="POST"
-                    onsubmit="return confirm('Вы уверены, что хотите прекратить отслеживание этой квартиры?')">
-                    @csrf
-                    @method('DELETE')
+                <div class="d-flex gap-2">
+                    {{-- Форма обновления цены --}}
+                    <form action="{{ route('apartments.refresh', $apartment) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                            Проверить цену сейчас
+                        </button>
+                    </form>
 
-                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                        Удалить квартиру из отслеживаемых
-                    </button>
-                </form>
+                    {{-- Форма удаления --}}
+                    <form action="{{ route('apartments.destroy', $apartment->id) }}" method="POST"
+                        onsubmit="return confirm('Вы уверены, что хотите прекратить отслеживание этой квартиры?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            Удалить квартиру из отслеживаемых
+                        </button>
+                    </form>
+                </div>
+
 
             </div>
         </div>

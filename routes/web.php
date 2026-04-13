@@ -14,3 +14,5 @@ Route::get('apartments/{id}', [ApartmentController::class, 'show'])->name('apart
 Route::post('apartments', [ApartmentController::class, 'store'])->name('apartments.store');
 
 Route::delete('apartments/{id}', [ApartmentController::class, 'destroy'])->name('apartments.destroy');
+
+Route::post('apartments/{id}/refresh', [ApartmentController::class, 'refresh'])->name('apartments.refresh');

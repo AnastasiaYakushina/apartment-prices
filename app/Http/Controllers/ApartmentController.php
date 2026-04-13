@@ -30,7 +30,7 @@ class ApartmentController extends Controller
         $data = Apartment::getRemoteData($url);
 
         if (!$data) {
-            return back()->withErrors(['url' => 'Не удалось извлечь данные о квартире. Проверьте ссылку.']);
+            return back()->with('error', 'Не удалось извлечь данные о квартире. Проверьте ссылку');
         }
 
         $apartment = Apartment::firstOrNew(['url' => $url]);
@@ -52,5 +52,26 @@ class ApartmentController extends Controller
         $apartment = Apartment::findOrFail($id);
         $apartment->delete();
         return redirect()->route('apartments.index')->with('success', 'Квартира больше не отслеживается');
+    }
+
+    public function refresh($id)
+    {
+        $apartment = Apartment::findOrFail($id);
+        $currentPrice = $apartment->price;
+
+        $data = Apartment::getRemoteData($apartment->url);
+
+        if (!$data) {
+            return back()->with('error', 'Не удалось извлечь данные о квартире. Проверьте ссылку');
+        }
+
+        if ($apartment->refreshData($data['price'])) {
+            if ($data['price'] < $currentPrice) {
+                return back()->with('success', 'Цена квартиры снизилась');
+            } else {
+                return back()->with('error', 'Цена квартиры возросла');
+            }
+        }
+        return back()->with('info', 'Цена квартиры не изменилась');
     }
 }
