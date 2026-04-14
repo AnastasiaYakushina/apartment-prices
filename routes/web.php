@@ -9,10 +9,10 @@ Route::get('/', function () {
 
 Route::get('apartments', [ApartmentController::class, 'index'])->name('apartments.index');
 
-Route::get('apartments/{id}', [ApartmentController::class, 'show'])->name('apartments.show');
+Route::get('apartments/{apartment}', [ApartmentController::class, 'show'])->name('apartments.show');
 
 Route::post('apartments', [ApartmentController::class, 'store'])->name('apartments.store');
 
-Route::delete('apartments/{id}', [ApartmentController::class, 'destroy'])->name('apartments.destroy');
+Route::delete('apartments/{apartment}', [ApartmentController::class, 'destroy'])->name('apartments.destroy');
 
-Route::post('apartments/{id}/refresh', [ApartmentController::class, 'refresh'])->name('apartments.refresh');
+Route::post('apartments/{apartment}/refresh', [ApartmentController::class, 'refresh'])->name('apartments.refresh');

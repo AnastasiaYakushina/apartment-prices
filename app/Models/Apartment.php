@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
 class Apartment extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['url', 'price', 'initial_price', 'rooms_count', 'area', 'developer', 'complex'];
 
     public function prices()

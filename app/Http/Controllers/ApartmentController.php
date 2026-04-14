@@ -13,9 +13,8 @@ class ApartmentController extends Controller
         return view('apartment.index', compact('apartments'));
     }
 
-    public function show($id)
+    public function show(Apartment $apartment)
     {
-        $apartment = Apartment::findOrFail($id);
         return view('apartment.show', compact('apartment'));
     }
 
@@ -47,16 +46,15 @@ class ApartmentController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(Apartment $apartment)
     {
-        $apartment = Apartment::findOrFail($id);
         $apartment->delete();
+
         return redirect()->route('apartments.index')->with('success', 'Квартира больше не отслеживается');
     }
 
-    public function refresh($id)
+    public function refresh(Apartment $apartment)
     {
-        $apartment = Apartment::findOrFail($id);
         $currentPrice = $apartment->price;
 
         $data = Apartment::getRemoteData($apartment->url);
