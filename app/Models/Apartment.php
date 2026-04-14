@@ -16,28 +16,33 @@ class Apartment extends Model
 
     public static function getRemoteData($url)
     {
-        $flatId = basename($url);
+        try {
+            $flatId = basename($url);
 
-        $response = Http::withHeaders([
+            $response = Http::withHeaders([
             'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36',
-            ])->get("https://api.pik.ru/v2/flat?id={$flatId}");
+            ])->timeout(5)->get("https://api.pik.ru/v2/flat?id={$flatId}");
 
-        if ($response->successful()) {
-            $flat = $response->json() ?? null;
+            if ($response->successful()) {
+                $flat = $response->json();
 
-            if ($flat) {
-                return [
-                    'price'       => $flat['price'],
-                    'rooms_count' => $flat['rooms'],
-                    'area'        => $flat['area'],
-                    'developer'   => 'ПИК',
-                    'complex'     => $flat['block']['name']
-                ];
+                if (isset($flat['price'], $flat['rooms'], $flat['area'])) {
+                    return [
+                        'price'       => $flat['price'],
+                        'rooms_count' => $flat['rooms'],
+                        'area'        => $flat['area'],
+                        'developer'   => 'ПИК',
+                        'complex'     => $flat['block']['name'] ?? 'Неизвестный ЖК'
+                    ];
+                }
             }
+        } catch (\Exception $e) {
+            \Log::error("Ошибка парсинга квартиры {$url}: " . $e->getMessage());
         }
 
         return null;
     }
+
 
     public function getPriceTotalDiff()
     {

@@ -16,6 +16,7 @@
                         <th>Площадь (м²)</th>
                         <th>Комнат</th>
                         <th>Цена (руб.)</th>
+                        <th>Отслеживается с:</th>
                         <th>Изменение цены</th>
                         <th>Подробнее</th>
                     </tr>
@@ -29,6 +30,8 @@
                             <td>{{ $apartment->area }}</td>
                             <td>{{ $apartment->rooms_count }}</td>
                             <td>{{ number_format($apartment->price, 0, '.', ' ') }}</td>
+                            <td>{{ $apartment->created_at->format('d.m.Y') }}
+                            </td>
                             <td
                                 class="fw-bold {{ $apartment->getPriceTotalDiff() > 0 ? 'text-danger' : ($apartment->getPriceTotalDiff() < 0 ? 'text-success' : 'text-dark') }}">
                                 {{ $apartment->getPriceTotalDiff() > 0 ? '+' : '' }}
