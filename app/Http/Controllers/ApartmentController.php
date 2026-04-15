@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Apartment;
+use App\Services\Parsers\PikParserService;
+use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
 {
@@ -18,7 +19,7 @@ class ApartmentController extends Controller
         return view('apartment.show', compact('apartment'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, PikParserService $parser)
     {
         $validated = $request->validate([
              'url' => 'required|url|starts_with:https://www.pik.ru,https://pik.ru'
@@ -26,7 +27,7 @@ class ApartmentController extends Controller
 
         $url = $validated['url'];
 
-        $data = Apartment::getRemoteData($url);
+        $data = $parser->parse($url);
 
         if (!$data) {
             return back()->with('error', 'Не удалось извлечь данные о квартире. Проверьте ссылку');
@@ -53,11 +54,11 @@ class ApartmentController extends Controller
         return redirect()->route('apartments.index')->with('success', 'Квартира больше не отслеживается');
     }
 
-    public function refresh(Apartment $apartment)
+    public function refresh(Apartment $apartment, PikParserService $parser)
     {
         $currentPrice = $apartment->price;
 
-        $data = Apartment::getRemoteData($apartment->url);
+        $data = $parser->parse($apartment->url);
 
         if (!$data) {
             return back()->with('error', 'Не удалось извлечь данные о квартире. Проверьте ссылку');
