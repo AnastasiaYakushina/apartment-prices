@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Apartment;
-use App\Services\Parsers\PikParserService;
+use App\Services\ApartmentParserManager;
 use Illuminate\Http\Request;
 
 class ApartmentController extends Controller
@@ -19,13 +19,19 @@ class ApartmentController extends Controller
         return view('apartment.show', compact('apartment'));
     }
 
-    public function store(Request $request, PikParserService $parser)
+    public function store(Request $request, ApartmentParserManager $manager)
     {
         $validated = $request->validate([
-             'url' => 'required|url|starts_with:https://www.pik.ru,https://pik.ru'
+             'url' => 'required|url'
         ]);
 
         $url = $validated['url'];
+
+        $parser = $manager->getParser($url);
+
+        if (!$parser) {
+            return back()->with('error', 'Застройщик пока не поддерживается');
+        }
 
         $data = $parser->parse($url);
 
@@ -54,9 +60,15 @@ class ApartmentController extends Controller
         return redirect()->route('apartments.index')->with('success', 'Квартира больше не отслеживается');
     }
 
-    public function refresh(Apartment $apartment, PikParserService $parser)
+    public function refresh(Apartment $apartment, ApartmentParserManager $manager)
     {
         $currentPrice = $apartment->price;
+
+        $parser = $manager->getParser($apartment->url);
+
+        if (!$parser) {
+            return back()->with('error', 'Застройщик пока не поддерживается');
+        }
 
         $data = $parser->parse($apartment->url);
 

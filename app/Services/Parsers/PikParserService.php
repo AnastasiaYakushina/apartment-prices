@@ -5,9 +5,9 @@ namespace App\Services\Parsers;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class PikParserService
+class PikParserService implements ApartmentParserInterface
 {
-    public function parse($url)
+    public function parse(string $url): ?array
     {
         try {
             $flatId = basename($url);
