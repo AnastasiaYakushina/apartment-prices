@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class ApartmentPrice extends Model
 {
@@ -33,5 +34,12 @@ class ApartmentPrice extends Model
         }
 
         return ($this->price / $previous->price) * 100 - 100;
+    }
+
+    protected function formattedPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => number_format($this->price, 0, '.', ' ') . ' ₽',
+        );
     }
 }

@@ -22,7 +22,7 @@
                         </tr>
                         <tr>
                             <th class="text-muted">Цена:</th>
-                            <td class="fw-bold">{{ number_format($apartment->price, 0, '.', ' ') }} руб.</td>
+                            <td class="fw-bold">{{ $apartment->formatted_price }}</td>
                         </tr>
                         <tr>
                             <th class="text-muted">Изменение с начала отслеживания:</th>
@@ -90,7 +90,7 @@
                         @foreach ($apartment->prices->sortByDesc('created_at')->values() as $index => $price_entry)
                             <tr>
                                 <td>{{ $price_entry->created_at->format('d.m.Y') }}</td>
-                                <td class="fw-bold">{{ number_format($price_entry->price, 0, '.', ' ') }} ₽</td>
+                                <td class="fw-bold">{{ $price_entry->formatted_price }}</td>
                                 <td
                                     class="{{ $price_entry->getPriceDiff() > 0 ? 'text-danger' : ($price_entry->getPriceDiff() < 0 ? 'text-success' : 'text-muted') }}">
                                     {{ $price_entry->getPriceDiff() > 0 ? '+' : '' }}{{ $price_entry->getPriceDiff() != 0 ? number_format($price_entry->getPriceDiff(), 0, '.', ' ') : '—' }}
